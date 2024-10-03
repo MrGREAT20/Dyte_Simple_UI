@@ -19,11 +19,14 @@ import {
   DyteMeetingTitle,
   DyteMicToggle,
   DyteMoreToggle,
+  DyteMuteAllButton,
   DyteNameTag,
   DyteParticipantTile,
   DyteParticipantsAudio,
+  DytePipToggle,
   DytePluginsToggle,
   DytePollsToggle,
+  DyteRecordingToggle,
   DyteScreenShareToggle,
   DyteScreenshareView,
   DyteSettings,
@@ -100,7 +103,7 @@ function Meeting() {
       <DyteHeader meeting={meeting} states={states} className="flex items-center gap-3 h-12 border-b w-full px-2 text-sm"/>
 
       <main className="flex flex-1 p-2">
-      <DyteParticipantsAudio meeting={meeting} /> {/** this is used to able to hear the audio in the meeting */}
+      <DyteParticipantsAudio meeting={meeting}/> {/** this is used to able to hear the audio in the meeting */}
 
         {/* the below is used to render all the other participants except us in the meeting */}
 
@@ -116,7 +119,7 @@ function Meeting() {
         because in our meeting max to max only 1 user is able to share the screen */}
 
           {screenshares.length > 0 && 
-          <DyteScreenshareView meeting={meeting} participant={screenshares[0]} style={{ height: '480px' }} onDyteStateUpdate={(e) => {console.log(e.detail); updateStates(e.detail)}}>
+          <DyteScreenshareView meeting={meeting} participant={screenshares[0]} style={{ height: '480px' }} onDyteStateUpdate={(e) => {console.log(e)}}>
             <DyteNameTag participant={screenshares[0]}>
               <DyteAudioVisualizer slot="start" participant={screenshares[0]} />
             </DyteNameTag>
@@ -143,31 +146,36 @@ function Meeting() {
           </DyteNameTag>
         </DyteParticipantTile>
         {/* <DyteGrid meeting={meeting} config={config}/> */}
-        {states.activeSidebar && <DyteSidebar meeting={meeting} states={states} onDyteStateUpdate={(e) => {console.log(e.detail); updateStates(e.detail)}}/>}
+        {states.activeSidebar && <DyteSidebar meeting={meeting} states={states} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>}
       </main>
 
       {/* the below section is the control bar section, here every button click emits a DyteStateUpdate which we listen and based on that events, 
       screens are rendered and other things */}
 
-      {/* <footer className="p-2 flex place-items-center justify-center">
+      <footer className="p-2 flex place-items-center justify-center">
 
 
-        <DyteMicToggle meeting={meeting} />
-        <DyteCameraToggle meeting={meeting} />
-        <DyteScreenShareToggle meeting={meeting} />
-        <DyteChatToggle meeting={meeting} />
-        <DytePollsToggle meeting={meeting} />
-        <DytePluginsToggle meeting={meeting}/>
-        <DyteSettingsToggle states={states}/>
-        <DyteMoreToggle states={states}/>
-        <DyteLeaveButton/>
+        <DyteMicToggle meeting={meeting} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
+        <DyteCameraToggle meeting={meeting} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>  
+        <DyteScreenShareToggle states={states} meeting={meeting} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
+        <DytePluginsToggle states={states} meeting={meeting} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
+        <DyteSettingsToggle states={states} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
+        <DyteMoreToggle states={states} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}>
+          <div slot="more-elements">
+              <DytePipToggle meeting={meeting} states={states} variant='horizontal'/>
+              <DyteMuteAllButton meeting={meeting} variant='horizontal'/>
+              <DyteRecordingToggle meeting={meeting} variant='horizontal'/>
+          </div>
+        </DyteMoreToggle>
+        <DyteLeaveButton onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
+        <DyteDialogManager states={states} meeting={meeting} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
 
-        DyteDialogManager is required whenever a dialog should be rendered on click of the button like the Leave button, Settings button
+        {/* DyteDialogManager is required whenever a dialog should be rendered on click of the button like the Leave button, Settings button */}
 
 
-      </footer> */}
-      <DyteControlbar meeting={meeting} states={states} className="p-2 flex place-items-center justify-center"/>
-      <DyteDialogManager states={states} meeting={meeting} onDyteStateUpdate={(e) => {console.log(e); updateStates(e.detail)}}/>
+      </footer>
+      {/* <DyteControlbar meeting={meeting} states={states} className="p-2 flex place-items-center justify-center"/>
+      <DyteDialogManager states={states} meeting={meeting}/> */}
     </div>
   );
 }
